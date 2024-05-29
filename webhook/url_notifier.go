@@ -103,6 +103,7 @@ func (n *URLNotifier) Stop(force bool) {
 func (n *URLNotifier) send(event *livekit.WebhookEvent) error {
 	// set dropped count
 	event.NumDropped = n.dropped.Swap(0)
+	event.DequeuedAt = time.Now().Unix()
 	encoded, err := protojson.Marshal(event)
 	if err != nil {
 		return err
