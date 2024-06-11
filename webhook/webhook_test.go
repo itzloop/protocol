@@ -170,8 +170,8 @@ func TestURLNotifierLifecycle(t *testing.T) {
 	})
 }
 
-func newTestNotifier(dropWhenFull bool) *URLNotifier {
-	return NewURLNotifier(URLNotifierParams{
+func newTestNotifier(dropWhenFull bool) URLNotifier {
+	return NewDefaultURLNotifier(URLNotifierParams{
 		QueueSize:    20,
 		URL:          testUrl,
 		APIKey:       apiKey,

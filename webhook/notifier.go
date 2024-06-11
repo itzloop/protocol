@@ -27,13 +27,13 @@ type QueuedNotifier interface {
 }
 
 type DefaultNotifier struct {
-	urlNotifiers []*URLNotifier
+	urlNotifiers []URLNotifier
 }
 
 func NewDefaultNotifier(apiKey, apiSecret string, urls []string) QueuedNotifier {
 	n := &DefaultNotifier{}
 	for _, url := range urls {
-		u := NewURLNotifier(URLNotifierParams{
+		u := NewDefaultURLNotifier(URLNotifierParams{
 			URL:          url,
 			Logger:       logger.GetLogger().WithComponent("webhook"),
 			APIKey:       apiKey,
@@ -52,7 +52,7 @@ func NewDefaultNotifierByParams(params []URLNotifierParams) QueuedNotifier {
 			p.Logger = logger.GetLogger().WithComponent("webhook")
 		}
 
-		u := NewURLNotifier(p)
+		u := NewDefaultURLNotifier(p)
 		n.urlNotifiers = append(n.urlNotifiers, u)
 	}
 	return n
@@ -62,7 +62,7 @@ func (n *DefaultNotifier) Stop(force bool) {
 	wg := sync.WaitGroup{}
 	for _, u := range n.urlNotifiers {
 		wg.Add(1)
-		go func(u *URLNotifier) {
+		go func(u URLNotifier) {
 			defer wg.Done()
 			u.Stop(force)
 		}(u)
