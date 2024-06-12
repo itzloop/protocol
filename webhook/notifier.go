@@ -24,10 +24,25 @@ import (
 
 type QueuedNotifier interface {
 	QueueNotify(ctx context.Context, event *livekit.WebhookEvent) error
+	Stop(force bool)
 }
 
 type DefaultNotifier struct {
 	urlNotifiers []URLNotifier
+}
+
+func NewBatchedNotifier(ctx context.Context, apiKey, apiSecret string, urls []string) QueuedNotifier {
+	n := &DefaultNotifier{}
+	for _, url := range urls {
+		u := NewBatchURLNotifier(ctx, BatchURLNotifierParams{
+			Logger:    logger.GetLogger().WithComponent("webhook"),
+			URL:       url,
+			APIKey:    apiKey,
+			APISecret: apiSecret,
+		})
+		n.urlNotifiers = append(n.urlNotifiers, u)
+	}
+	return n
 }
 
 func NewDefaultNotifier(apiKey, apiSecret string, urls []string) QueuedNotifier {
