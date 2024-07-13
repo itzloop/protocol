@@ -1,5 +1,11 @@
 # github.com/livekit/protocol
 
+## 1.17.1
+
+### Patch Changes
+
+- Added session token option for s3 uploads - [#734](https://github.com/livekit/protocol/pull/734) ([@frostbyte73](https://github.com/frostbyte73))
+
 ## 1.17.0
 
 ### Minor Changes
